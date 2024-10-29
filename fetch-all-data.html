@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch Data</title>
+  </head>
+<body>
+  <!-- Container for displaying fetched data -->
+  <div id="messagesContainer"></div>
+
+  <!-- Firebase SDKs -->
+ 
+  <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+
+  <!-- JavaScript for Firebase initialization and data fetching -->
+  <script>
+    const firebaseConfig = {
+            apiKey: "QUHSDIOJJPOKPK",
+            authDomain: "xxxxx.firebaseapp.com",
+            databaseURL: "https://dbs3-6a018-default-rtdb.firebaseio.com",
+            projectId: "db67-6a018",
+            storageBucket: "db67-6a018.appspot.com",
+            messagingSenderId: "28998542563",
+            appId: "1:476698542091:web:41c0c69274W5d95a9522q3"
+    };
+
+
+    // // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to the Realtime Database
+    const database = firebase.database();
+    const messagesRef = database.ref('Collected Data');
+
+    // Function to fetch and display data
+    function fetchMessages() {
+      messagesRef.on('value', (snapshot) => {
+        const messagesContainer = document.getElementById('messagesContainer');
+        messagesContainer.innerHTML = ''; // Clear previous content
+
+        snapshot.forEach((childSnapshot) => {
+          const username = childSnapshot.key; // Retrieve the username key
+          const message = childSnapshot.val();
+          const name = message.name;
+          const email = message.email;
+
+          // Create HTML elements to display each message
+          const messageElement = document.createElement('div');
+          messageElement.classList.add('message'); // Optional: add a class for styling
+          messageElement.innerHTML = `
+            <p><strong>Username:</strong> ${username}</p>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+          `;
+          
+          // Append each message to the container
+          messagesContainer.appendChild(messageElement);
+        });
+      });
+    }
+
+    // Call the fetchMessages function to load data when the page loads
+    fetchMessages();
+  </script>
+</body>
+</html>
